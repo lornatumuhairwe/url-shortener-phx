@@ -1,16 +1,17 @@
-<%= form_for @changeset, Routes.home_path(@conn, :create), fn f -> %>
-    <div class="spaced-row">
-        <%= text_input f, :name %>
-        <%= submit "Shorten" %>
-    </div>
-<% end %>
-
-<ul class="most-recent-links">
-    <%= for url <- @links do %>
-        <li class="spaced-row">
-            <span><%= shorten_name(url.name) %></span>
-            <span><%= Routes.home_url(@conn, :index) <> url.slug %></span>
-        </li>
+<div class="body">
+    <%= form_for @changeset, Routes.home_path(@conn, :create), fn f -> %>
+        <div class="spaced-row">
+            <%= text_input f, :name %>
+            <%= submit "Shorten" %>
+        </div>
     <% end %>
 
-</ul>
+    <ul class="most-recent-links">
+        <%= for url <- @links do %>
+            <li class="spaced-row">
+                <span><%= shorten_name(url.name) %></span>
+                <a href="<%= Routes.home_url(@conn, :index) <> url.slug %>" target="_blank"><%= Routes.home_url(@conn, :index) <> url.slug %></a>
+            </li>
+        <% end %>
+    </ul>
+</div>

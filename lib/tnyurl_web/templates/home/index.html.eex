@@ -1,7 +1,15 @@
 <div class="body">
     <%= form_for @changeset, Routes.home_path(@conn, :create), fn f -> %>
+        <%= if @changeset.action do %>
+            <div class="alert alert-danger">
+                <p>Oops! Something went wrong.</p>
+            </div>
+        <% end %>
         <div class="spaced-row">
-            <%= text_input f, :name %>
+            <fieldset>
+                <%= text_input f, :name %>
+                <%= error_tag f, :name %>
+            </fieldset>
             <%= submit "Shorten" %>
         </div>
     <% end %>

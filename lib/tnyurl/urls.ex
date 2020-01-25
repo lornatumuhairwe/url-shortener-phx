@@ -6,7 +6,7 @@ defmodule Tnyurl.Urls do
   def create_url(attrs \\ %{}) do
     %Url{}
     |> Url.changeset(attrs)
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   def change_url(attrs \\ %{}) do

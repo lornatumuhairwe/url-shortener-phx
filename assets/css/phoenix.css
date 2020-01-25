@@ -107,3 +107,7 @@ header {
 .spaced-row button {
   margin-left: 10px;
 }
+
+.spaced-row fieldset {
+  width: 100%;
+}

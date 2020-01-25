@@ -10,8 +10,15 @@ defmodule TnyurlWeb.HomeController do
   end
 
   def create(conn, %{"url" => url}) do
-    Urls.create_url(url)
-    redirect(conn, to: "/")
+    case Urls.create_url(url) do
+      {:ok, url} ->
+        conn
+        |> put_flash(:info, "Success!")
+        |> redirect(to: "/")
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "index.html", changeset: changeset, links: Urls.list_urls())
+    end
+
   end
 
   def show(conn, %{"slug" => slug}) do

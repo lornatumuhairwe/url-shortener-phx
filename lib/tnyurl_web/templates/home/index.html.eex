@@ -7,7 +7,7 @@
         <% end %>
         <div class="spaced-row">
             <fieldset>
-                <%= text_input f, :name %>
+                <%= text_input f, :name, placeholder: "Shorten your url" %>
                 <%= error_tag f, :name %>
             </fieldset>
             <%= submit "Shorten" %>

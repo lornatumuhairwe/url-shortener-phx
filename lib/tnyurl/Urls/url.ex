@@ -15,6 +15,7 @@ defmodule Tnyurl.Urls.Url do
     |> cast(attrs, [:name])
     |> put_change(:slug, generate_slug())
     |> validate_required([:name, :slug])
+    |> validate_format(:name, ~r/^https?:\/\/|^www./)
   end
 
   def generate_slug() do

@@ -1,0 +1,15 @@
+language: elixir
+
+services:
+  - postgresql
+
+elixir:
+  - 1.11.0
+
+otp_release:
+  - 23.0
+
+env:
+  - MIX_ENV=test
+
+script: mix test && mix coveralls.travis

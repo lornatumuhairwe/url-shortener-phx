@@ -1,40 +1,68 @@
-version: 2.1
+# version: 2.1
 
+# jobs:
+#   build:
+#     environment:
+#       PATH: "/home/circleci/.asdf/bin:/home/circleci/.asdf/shims:/usr/bin:/bin:/usr/sbin:/sbin"
+#     machine:
+#       image: ubuntu-1604:202004-01
+#     steps:
+#       - checkout
+#       - restore_cache:
+#           keys:
+#             - circle_sample-asdf
+#       - run: if ! command -v asdf; then git clone https://github.com/asdf-vm/asdf.git ~/.asdf; fi
+#       - run: asdf plugin list | grep -q erlang || asdf plugin add erlang
+#       - run: asdf plugin list | grep -q elixir || asdf plugin add elixir
+#       - run:
+#           command: asdf install
+#           no_output_timeout: 20m
+#       - run: mix local.rebar --force
+#       - save_cache:
+#           key: circle_sample-asdf
+#           paths:
+#             - ~/.asdf
+#       - restore_cache:
+#           keys:
+#             - circle_sample-{{ .Branch }}-{{ checksum "mix.lock" }}
+#       - run: mix local.hex --force
+#       - run: mix deps.get
+#       - save_cache:
+#           key: circle_sample-{{ .Branch }}-{{ checksum "mix.lock" }}
+#           paths:
+#             - _build
+#             - ~/.mix
+#       - run: mix coveralls.circle
+
+# workflows:
+#   ci:
+#     jobs:
+#       - build
+
+# Elixir CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-elixir/ for more details
+
+version: 2
 jobs:
   build:
-    environment:
-      PATH: "/home/circleci/.asdf/bin:/home/circleci/.asdf/shims:/usr/bin:/bin:/usr/sbin:/sbin"
-    machine:
-      image: ubuntu-1604:202004-01
+    docker:
+      # specify the version here
+      - image: circleci/elixir:1.11
+      - image: circleci/postgres
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD:
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+    working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - circle_sample-asdf
-      - run: if ! command -v asdf; then git clone https://github.com/asdf-vm/asdf.git ~/.asdf; fi
-      - run: asdf plugin list | grep -q erlang || asdf plugin add erlang
-      - run: asdf plugin list | grep -q elixir || asdf plugin add elixir
-      - run:
-          command: asdf install
-          no_output_timeout: 20m
+      # specify any bash command here prefixed with `run: `
       - run: mix local.rebar --force
-      - save_cache:
-          key: circle_sample-asdf
-          paths:
-            - ~/.asdf
-      - restore_cache:
-          keys:
-            - circle_sample-{{ .Branch }}-{{ checksum "mix.lock" }}
       - run: mix local.hex --force
       - run: mix deps.get
-      - save_cache:
-          key: circle_sample-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths:
-            - _build
-            - ~/.mix
-      - run: mix coveralls.circle
-
-workflows:
-  ci:
-    jobs:
-      - build
+      - run: mix ecto.create
+      - run: mix test

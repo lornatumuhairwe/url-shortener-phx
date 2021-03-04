@@ -12,4 +12,5 @@ otp_release:
 env:
   - MIX_ENV=test
 
-script: mix test && mix coveralls.travis
+script: echo "Hello world"
+# script: mix test && mix coveralls.travis
